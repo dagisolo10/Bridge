@@ -1,3 +1,4 @@
 {
-    "cSpell.words": ["libsql"]
+    "cSpell.words": ["libsql", "ulidx"],
+    "js/ts.experimental.useTsgo": false
 }
