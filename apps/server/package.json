@@ -17,16 +17,20 @@
         "debug": "nest start --debug --watch"
     },
     "dependencies": {
+        "@package/socket": "*",
         "@nestjs/common": "^11.0.1",
         "@nestjs/config": "^12.0.0",
         "@nestjs/core": "^11.0.1",
         "@nestjs/mapped-types": "*",
         "@nestjs/platform-express": "^11.0.1",
+        "@nestjs/platform-socket.io": "^11.0.1",
+        "@nestjs/websockets": "^11.0.1",
         "@prisma/adapter-libsql": "^7.10.0",
         "@prisma/client": "7.10.0",
         "jsonwebtoken": "^9.0.3",
         "reflect-metadata": "^0.2.2",
         "rxjs": "^7.8.1",
+        "socket.io": "^4.8.3",
         "ulidx": "^2.4.1"
     },
     "devDependencies": {

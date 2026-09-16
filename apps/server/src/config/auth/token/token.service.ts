@@ -31,6 +31,8 @@ export class TokenService {
         const newToken = this.generateToken(deviceId);
 
         await this.prisma.token.update({ where: { id: deviceToken.id }, data: { currentToken: newToken, previousToken: deviceToken.currentToken } });
+
+        return { newToken };
     }
 
     async registerDeviceToken(deviceId: string) {
@@ -42,18 +44,31 @@ export class TokenService {
     }
 
     private async checkToken(token: string) {
-        const { deviceId } = jwt.verify(token, this.jwtSecretKey) as { deviceId: string };
+        try {
+            const { deviceId } = jwt.verify(token, this.jwtSecretKey) as { deviceId: string };
 
-        const deviceToken = await this.prisma.token.findFirst({ where: { deviceId } });
+            const deviceToken = await this.prisma.token.findFirst({ where: { deviceId } });
 
-        if (!deviceToken) {
-            throw new NotFoundException("Token not found");
+            if (!deviceToken) {
+                throw new NotFoundException("Token not found");
+            }
+
+            if (token !== deviceToken.currentToken) {
+                throw new ForbiddenException("Invalid or revoked token");
+            }
+
+            return { deviceId, deviceToken };
+        } catch {
+            console.error("❌ Jsonwebtoken failed to verify token");
+            return {
+                deviceId: "Oops",
+                deviceToken: {
+                    id: "string",
+                    deviceId: "string",
+                    currentToken: "string",
+                    previousToken: "string | null",
+                },
+            };
         }
-
-        if (token !== deviceToken.currentToken) {
-            throw new ForbiddenException("Invalid or revoked token");
-        }
-
-        return { deviceId, deviceToken };
     }
 }

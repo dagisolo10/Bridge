@@ -1,5 +1,6 @@
 import { TokenService } from "@/config/auth/token/token.service";
 import { PrismaService } from "@/config/prisma/prisma.service";
+import { RequestService } from "@/config/request/request.service";
 import { CreateDeviceDto, UpdateDeviceDto } from "@/features/device/device.dto";
 import { Injectable, NotFoundException } from "@nestjs/common";
 
@@ -8,10 +9,23 @@ export class DeviceService {
     constructor(
         private readonly prisma: PrismaService,
         private readonly tokenService: TokenService,
+        private readonly requestService: RequestService,
     ) {}
 
     async getDevices() {
-        return await this.prisma.device.findMany();
+        return { devices: await this.prisma.device.findMany(), tokens: await this.prisma.token.findMany() };
+    }
+
+    async getDevice() {
+        const deviceId = this.requestService.getDeviceId();
+
+        const device = await this.prisma.device.findUnique({ where: { id: deviceId } });
+
+        if (!device) {
+            throw new NotFoundException("Device not found");
+        }
+
+        return device;
     }
 
     async addDevice(data: CreateDeviceDto) {
@@ -33,6 +47,7 @@ export class DeviceService {
     }
 
     async deleteDevices() {
+        await this.prisma.token.deleteMany();
         await this.prisma.device.deleteMany();
 
         return { success: true };

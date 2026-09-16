@@ -1,25 +1,33 @@
-import * as SecureStore from "expo-secure-store";
 import { AuthContext } from "@/contexts/auth-context";
+import { useGetDevice } from "@/hooks/tan-stack/use-device";
+import { injectTokenResolver, injectTokenUpdater } from "@/lib/api/axios";
+import * as SecureStore from "expo-secure-store";
 import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 
-const TOKEN_KEY = "token-storage-key";
+const TOKEN_KEY = "TOKEN_KEY";
 
 export default function AuthProvider({ children }: PropsWithChildren) {
+    const { data: device } = useGetDevice();
+
+    const authenticated = Boolean(device);
     const [token, setToken] = useState<string | null>(null);
+
+    const updateToken = useCallback(async (token: string) => {
+        setToken(token);
+        await SecureStore.setItemAsync(TOKEN_KEY, token);
+    }, []);
+
+    useEffect(() => {
+        injectTokenUpdater(updateToken);
+        injectTokenResolver(() => token);
+    }, [token, updateToken]);
 
     useEffect(() => {
         async function fetchToken() {
             setToken(await SecureStore.getItemAsync(TOKEN_KEY));
         }
-
         void fetchToken();
     }, []);
 
-    const updateToken = useCallback(async (token: string) => {
-        setToken(token);
-
-        await SecureStore.setItemAsync(TOKEN_KEY, token);
-    }, []);
-
-    return <AuthContext.Provider value={{ token, updateToken }}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={{ token, authenticated, updateToken }}>{children}</AuthContext.Provider>;
 }

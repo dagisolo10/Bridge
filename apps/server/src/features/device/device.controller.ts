@@ -7,8 +7,13 @@ import { Body, Controller, Delete, Get, Patch, Post } from "@nestjs/common";
 export class DeviceController {
     constructor(private readonly deviceService: DeviceService) {}
 
-    @Public()
     @Get()
+    getDevice() {
+        return this.deviceService.getDevice();
+    }
+
+    @Public()
+    @Get("all")
     getDevices() {
         return this.deviceService.getDevices();
     }
