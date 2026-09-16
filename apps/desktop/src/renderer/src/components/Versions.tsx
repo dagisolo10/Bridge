@@ -1,15 +1,13 @@
 import { useState } from "react";
 
-function Versions(): React.JSX.Element {
+export default function Versions() {
     const [versions] = useState(window.electron.process.versions);
 
     return (
-        <ul className="versions">
-            <li className="electron-version">Electron v{versions.electron}</li>
-            <li className="chrome-version">Chromium v{versions.chrome}</li>
-            <li className="node-version">Node v{versions.node}</li>
+        <ul className="absolute bottom-7.5 my-auto flex items-center overflow-hidden rounded-[24px] bg-[#202127] px-4 backdrop-blur-xl">
+            <li className="border-border float-left block border-r p-5 text-[14px] leading-3.5 opacity-80 last:border-none">Electron v{versions.electron}</li>
+            <li className="border-border float-left block border-r p-5 text-[14px] leading-3.5 opacity-80 last:border-none">Chromium v{versions.chrome}</li>
+            <li className="border-border float-left block border-r p-5 text-[14px] leading-3.5 opacity-80 last:border-none">Node v{versions.node}</li>
         </ul>
     );
 }
-
-export default Versions;
