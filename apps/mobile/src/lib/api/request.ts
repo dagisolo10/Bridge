@@ -5,7 +5,7 @@ export async function requestApi<T>(request: () => Promise<{ data: T | ApiError 
     try {
         const { data } = await request();
 
-        if (hasApiError(data)) throw data.message;
+        if (hasApiError(data)) throw new Error(data.message.join(", "));
 
         return data;
     } catch (error) {

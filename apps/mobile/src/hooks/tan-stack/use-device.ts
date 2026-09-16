@@ -27,9 +27,9 @@ export function useRegisterDevice(options?: TMutationOptions<RegisterDeviceRespo
         onSuccess: async (data, variables, onMutateResult, context) => {
             await updateToken(data.token);
 
-            queryClient.invalidateQueries({ queryKey: queryKeys.device.get() });
+            await queryClient.invalidateQueries({ queryKey: queryKeys.device.get() });
 
-            if (options?.onSuccess) options.onSuccess(data, variables, onMutateResult, context);
+            await options?.onSuccess?.(data, variables, onMutateResult, context);
         },
     });
 }

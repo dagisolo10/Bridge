@@ -54,8 +54,6 @@
     --font-jakarta-regular: PlusJakartaSansRegular;
     --font-jakarta-semibold: PlusJakartaSansSemiBold;
     --font-jakarta-extrabold: PlusJakartaSansExtraBold;
-
-    --font-mono: var(--font-mono) --font-serif: var(--font-serif) --font-rounded: var(--font-rounded) --font-display: var(--font-display);
 }
 
 :root {

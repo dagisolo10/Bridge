@@ -12,6 +12,7 @@ export class DeviceService {
         private readonly requestService: RequestService,
     ) {}
 
+    // todo: Update
     async getDevices() {
         return { devices: await this.prisma.device.findMany(), tokens: await this.prisma.token.findMany() };
     }
@@ -29,11 +30,13 @@ export class DeviceService {
     }
 
     async addDevice(data: CreateDeviceDto) {
-        const device = await this.prisma.device.create({ data: { name: data.name, type: data.type } });
+        return await this.prisma.$transaction(async (tx) => {
+            const device = await tx.device.create({ data: { name: data.name, type: data.type } });
 
-        const token = await this.tokenService.registerDeviceToken(device.id);
+            const token = await this.tokenService.registerDeviceToken(device.id, tx);
 
-        return { device, token };
+            return { device, token };
+        });
     }
 
     async updateDevice(id: string, data: UpdateDeviceDto) {
@@ -47,6 +50,7 @@ export class DeviceService {
     }
 
     async deleteDevices() {
+        // todo: Remove
         await this.prisma.token.deleteMany();
         await this.prisma.device.deleteMany();
 

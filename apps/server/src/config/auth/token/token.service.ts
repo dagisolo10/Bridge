@@ -1,6 +1,7 @@
 import { PrismaService } from "@/config/prisma/prisma.service";
 import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
+import { Prisma } from "@prisma/client";
 import * as jwt from "jsonwebtoken";
 import { ulid } from "ulidx";
 
@@ -30,15 +31,40 @@ export class TokenService {
 
         const newToken = this.generateToken(deviceId);
 
-        await this.prisma.token.update({ where: { id: deviceToken.id }, data: { currentToken: newToken, previousToken: deviceToken.currentToken } });
+        try {
+            await this.prisma.token.update({
+                where: {
+                    id: deviceToken.id,
+                    currentToken: token,
+                },
+                data: {
+                    currentToken: newToken,
+                    previousToken: deviceToken.currentToken,
+                },
+            });
 
-        return { newToken };
+            return { newToken };
+        } catch (error) {
+            if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") {
+                const existingToken = await this.prisma.token.findUnique({
+                    where: {
+                        id: deviceToken.id,
+                    },
+                });
+
+                if (existingToken) {
+                    return { newToken: existingToken.currentToken };
+                }
+            }
+
+            throw error;
+        }
     }
 
-    async registerDeviceToken(deviceId: string) {
+    async registerDeviceToken(deviceId: string, tx: Prisma.TransactionClient) {
         const token = this.generateToken(deviceId);
 
-        await this.prisma.token.create({ data: { deviceId, currentToken: token } });
+        await tx.token.create({ data: { deviceId, currentToken: token } });
 
         return token;
     }
@@ -60,15 +86,7 @@ export class TokenService {
             return { deviceId, deviceToken };
         } catch {
             console.error("❌ Jsonwebtoken failed to verify token");
-            return {
-                deviceId: "Oops",
-                deviceToken: {
-                    id: "string",
-                    deviceId: "string",
-                    currentToken: "string",
-                    previousToken: "string | null",
-                },
-            };
+            throw new ForbiddenException("Invalid or expired token");
         }
     }
 }

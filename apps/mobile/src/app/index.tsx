@@ -5,7 +5,7 @@ import { useColor } from "@/hooks/use-theme";
 import Feather from "@expo/vector-icons/Feather";
 import { cn } from "cn";
 import { useState } from "react";
-import { ActivityIndicator, Pressable, View } from "react-native";
+import { ActivityIndicator, Platform, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function App() {
@@ -14,12 +14,14 @@ export default function App() {
 
     const [feedback, setFeedback] = useState<{ type: "success" | "error"; message: string } | null>(null);
 
-    const { data: device, isLoading: isDeviceLoading, refetch } = useGetDevice();
+    const { data: device, isLoading: isDeviceLoading, isError: isDeviceError, error: deviceError, refetch } = useGetDevice();
 
     const registerMutation = useRegisterDevice({
         onSuccess: async () => setFeedback({ type: "success", message: "Device registered successfully!" }),
         onError: (error) => setFeedback({ type: "error", message: error.message || "Failed to register device." }),
     });
+
+    const defaultDeviceName = Platform.OS === "ios" ? "iPhone" : Platform.OS === "android" ? "Android Phone" : "Mobile Device";
 
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
@@ -41,13 +43,26 @@ export default function App() {
                         </View>
                     </View>
 
-                    {/* Device Status Card */}
+                    {/* Device Status Section */}
                     {isDeviceLoading ? (
                         <View className="mb-6 h-28 items-center justify-center rounded-2xl border border-blue-500/10 bg-blue-500/5 p-4">
                             <ActivityIndicator color={color.text} />
                             <Text className="mt-2 text-xs opacity-50">Fetching device status...</Text>
                         </View>
+                    ) : isDeviceError ? (
+                        /* Error State Block */
+                        <View className="mb-6 rounded-2xl border border-rose-500/20 bg-rose-500/10 p-5">
+                            <View className="mb-2 flex-row items-center gap-2">
+                                <Feather name="alert-triangle" size={18} color="#f43f5e" />
+                                <Text className="text-sm font-bold text-rose-500">Failed to Fetch Device</Text>
+                            </View>
+                            <Text className="text-xs text-rose-400">{deviceError?.message || "Could not connect to the local server or retrieve device information."}</Text>
+                            <Pressable onPress={() => refetch()} className="mt-3 self-start rounded-lg bg-rose-500/20 px-3 py-1.5 active:opacity-70">
+                                <Text className="text-xs font-semibold text-rose-500">Retry Connection</Text>
+                            </Pressable>
+                        </View>
                     ) : device ? (
+                        /* Registered Device Block */
                         <View className="mb-6 rounded-2xl border border-blue-500/20 bg-blue-500/10 p-5">
                             <View className="mb-3 flex-row items-center justify-between">
                                 <Text className="text-[10px] font-bold tracking-widest text-blue-500 uppercase">Registered Device</Text>
@@ -67,7 +82,8 @@ export default function App() {
                             </View>
                         </View>
                     ) : (
-                        <View className="will-change-variable mb-6 items-center justify-center rounded-2xl border border-dashed border-neutral-700/30 bg-neutral-500/5 p-6">
+                        /* Empty Device State Block */
+                        <View className="mb-6 items-center justify-center rounded-2xl border border-dashed border-neutral-700/30 bg-neutral-500/5 p-6">
                             <View className="mb-2 h-10 w-10 items-center justify-center rounded-full bg-neutral-500/10">
                                 <Feather name="wifi-off" size={18} color={color.text} style={{ opacity: 0.5 }} />
                             </View>
@@ -93,7 +109,7 @@ export default function App() {
                 {/* Actions Section */}
                 <View className="gap-3">
                     <Pressable
-                        onPress={() => registerMutation.mutate({ name: "iPhone", type: "Phone" })}
+                        onPress={() => registerMutation.mutate({ name: defaultDeviceName, type: "Phone" })}
                         disabled={registerMutation.isPending}
                         className="h-13 w-full flex-row items-center justify-center gap-2 rounded-xl bg-blue-600 active:opacity-80 disabled:opacity-70"
                     >

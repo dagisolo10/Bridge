@@ -7,10 +7,11 @@ import { PropsWithChildren, useCallback, useEffect, useState } from "react";
 const TOKEN_KEY = "TOKEN_KEY";
 
 export default function AuthProvider({ children }: PropsWithChildren) {
-    const { data: device } = useGetDevice();
+    const [token, setToken] = useState<string | null>(null);
+
+    const { data: device } = useGetDevice({ enabled: !!token });
 
     const authenticated = Boolean(device);
-    const [token, setToken] = useState<string | null>(null);
 
     const updateToken = useCallback(async (token: string) => {
         setToken(token);

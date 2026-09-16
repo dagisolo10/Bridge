@@ -10,7 +10,6 @@ export function injectTokenResolver(fn: TokenInjector) {
     tokenResolver = fn;
 }
 
-// eslint-disable-next-line no-unused-vars
 type TokenUpdater = (token: string) => Promise<void> | void;
 let updateTokenCallback: TokenUpdater | null = null;
 export function injectTokenUpdater(fn: TokenUpdater) {
