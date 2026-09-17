@@ -32,8 +32,9 @@ export async function seedRules() {
             });
         }
 
-        console.log("✅  System rules seeded successfully!");
+        console.log("✅  System rules seeded successfully!\n");
     } catch (error) {
         console.error("❌ Error seeding rules:", error);
+        throw error;
     }
 }

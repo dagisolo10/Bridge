@@ -4,6 +4,8 @@ import { NestFactory } from "@nestjs/core";
 import { seedRules } from "../prisma/seed/rules";
 
 async function bootstrap() {
+    await seedRules();
+
     const app = await NestFactory.create(AppModule);
 
     app.useGlobalPipes(
@@ -17,8 +19,6 @@ async function bootstrap() {
     app.enableCors({ origin: true, credentials: true });
 
     await app.listen(3000);
-
-    await seedRules();
 }
 
 void bootstrap();
