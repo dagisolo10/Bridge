@@ -14,7 +14,8 @@
         "format": "prettier --write .",
         "gen": "bun x prisma generate",
         "reset": "bun x prisma migrate reset",
-        "debug": "nest start --debug --watch"
+        "debug": "nest start --debug --watch",
+        "seed": "bun run prisma/seed/index.ts"
     },
     "dependencies": {
         "@nestjs/common": "^11.0.1",

@@ -27,6 +27,6 @@
         "strictBindCallApply": true,
         "noFallthroughCasesInSwitch": true
     },
-    "include": ["src/**/*", "prisma7.config.ts"],
+    "include": ["src/**/*", "prisma7.config.ts", "./prisma/seed/*"],
     "exclude": ["node_modules", "dist"]
 }
