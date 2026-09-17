@@ -1,6 +1,6 @@
 import { PUBLIC_KEY } from "@/config/auth/public.decorator";
 import { TokenService } from "@/config/auth/token/token.service";
-import { CanActivate, ExecutionContext, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
+import { CanActivate, ExecutionContext, HttpException, Injectable, Logger, UnauthorizedException } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
 import { Request } from "express";
 
@@ -53,8 +53,14 @@ export class AuthGuard implements CanActivate {
 
             return true;
         } catch (error) {
+            if (error instanceof HttpException) {
+                this.logger.error(`AuthGuard rejected: ${error.message}`);
+                throw error;
+            }
+
             const errorMessage = error instanceof Error ? error.message : "Unknown error";
-            this.logger.error(`Token verification failed: ${errorMessage}`, error instanceof Error ? error.stack : undefined);
+            this.logger.error(`Unexpected auth error: ${errorMessage}`, error instanceof Error ? error.stack : undefined);
+
             throw new UnauthorizedException("Invalid or expired token");
         }
     }

@@ -85,7 +85,6 @@ export class TokenService {
 
             return { deviceId, deviceToken };
         } catch {
-            console.error("❌ Jsonwebtoken failed to verify token");
             throw new ForbiddenException("Invalid or expired token");
         }
     }

@@ -1,8 +1,8 @@
 import { Text } from "@/components/themed-text";
-import { useSocketIo } from "@/contexts/socket.io-context";
-import { useGetDevice, useRegisterDevice } from "@/hooks/tan-stack/use-device";
 import { useColor } from "@/hooks/use-theme";
 import Feather from "@expo/vector-icons/Feather";
+import { useSocketIo } from "@package/react/contexts";
+import { useGetDevice, useRegisterDevice } from "@package/react/hooks";
 import { cn } from "cn";
 import { useState } from "react";
 import { ActivityIndicator, Platform, Pressable, View } from "react-native";
@@ -26,7 +26,6 @@ export default function App() {
     return (
         <SafeAreaView style={{ flex: 1, backgroundColor: color.background }}>
             <View className="flex-1 justify-between px-6 py-8">
-                {/* Header & Status Section */}
                 <View>
                     <View className="mb-6 flex-row items-center justify-between">
                         <View className="flex-1">
@@ -34,7 +33,6 @@ export default function App() {
                             <Text className="mt-1 text-xs opacity-60">Connect this device to your Bridge LAN</Text>
                         </View>
 
-                        {/* Socket Status Badge */}
                         <View
                             className={cn("flex-row items-center gap-2 rounded-full border px-3 py-1.5", connected ? "border-emerald-500/20 bg-emerald-500/10" : "border-rose-500/20 bg-rose-500/10")}
                         >
@@ -43,7 +41,6 @@ export default function App() {
                         </View>
                     </View>
 
-                    {/* Device Status Section */}
                     {isDeviceLoading ? (
                         <View className="mb-6 h-28 items-center justify-center rounded-2xl border border-blue-500/10 bg-blue-500/5 p-4">
                             <ActivityIndicator color={color.text} />
@@ -92,7 +89,6 @@ export default function App() {
                         </View>
                     )}
 
-                    {/* Feedback Alert Banner */}
                     {feedback && (
                         <View
                             className={cn(
@@ -106,7 +102,6 @@ export default function App() {
                     )}
                 </View>
 
-                {/* Actions Section */}
                 <View className="gap-3">
                     <Pressable
                         onPress={() => registerMutation.mutate({ name: defaultDeviceName, type: "Phone" })}

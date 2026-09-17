@@ -1,11 +1,12 @@
-import { useAuth } from "@/contexts/auth-context";
-import { SocketIoContext, TypedSocket } from "@/contexts/socket.io-context";
-import { SERVER_URL } from "@/lib/api/axios";
-import { ClientToDaemonEvent, ClientToDaemonEvents, DaemonToClientData } from "@package/socket";
-import { PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
+import { useAuth } from "../contexts/auth-context";
+import { SocketIoContext, type TypedSocket } from "../contexts/socket.io-context";
+import { SERVER_URL } from "../lib/api/axios";
+
+import type { ClientToDaemonEvent, ClientToDaemonEvents, DaemonToClientData } from "@package/socket";
+import { type PropsWithChildren, useCallback, useEffect, useRef, useState } from "react";
 import { io } from "socket.io-client";
 
-export default function SocketIoProvider({ children }: PropsWithChildren) {
+export function SocketIoProvider({ children }: PropsWithChildren) {
     const { token, authenticated, updateToken } = useAuth();
 
     const [connected, setConnected] = useState(false);

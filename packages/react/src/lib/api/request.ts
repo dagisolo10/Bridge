@@ -1,4 +1,4 @@
-import { ApiError, hasApiError } from "@/lib/api/error";
+import { type ApiError, hasApiError } from "./error";
 import { isAxiosError } from "axios";
 
 export async function requestApi<T>(request: () => Promise<{ data: T | ApiError }>): Promise<T> {

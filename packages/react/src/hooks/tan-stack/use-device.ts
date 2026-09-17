@@ -1,9 +1,9 @@
-import { useAuth } from "@/contexts/auth-context";
-import { queryKeys } from "@/hooks/tan-stack/query-keys";
-import { api } from "@/lib/api/axios";
-import { requestApi } from "@/lib/api/request";
-import { TMutationOptions, TQueryOptions } from "@/types/options";
-import { Device, DeviceType } from "@package/model";
+import { useAuth } from "../../contexts/auth-context";
+import { queryKeys } from "./query-keys";
+import { api } from "../../lib/api/axios";
+import { requestApi } from "../../lib/api/request";
+import type { TMutationOptions, TQueryOptions } from "../../types/options";
+import type { Device, DeviceType } from "@package/model";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 export function useGetDevice<Data = Device>(options?: TQueryOptions<Data>) {

@@ -5,16 +5,16 @@
     "scripts": {
         "dev": "expo start",
         "dev-c": "expo start -c",
-        "reset-project": "node ./scripts/reset-project.js",
-        "android": "expo start --android",
+        "lint": "eslint --fix .",
         "ios": "expo start --ios",
         "web": "expo start --web",
-        "lint": "eslint --fix ."
+        "android": "expo start --android"
     },
     "dependencies": {
         "@expo/metro-runtime": "^57.0.15",
         "@expo/ui": "~57.0.18",
         "@expo/vector-icons": "^15.0.2",
+        "@package/react": "*",
         "@package/model": "*",
         "@package/socket": "*",
         "@tanstack/react-query": "^5.102.8",

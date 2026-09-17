@@ -1,14 +1,23 @@
 {
-    "extends": ["@electron-toolkit/tsconfig/tsconfig.web.json"],
-    "include": ["./src/renderer/src/**/*", "./src/preload/*.d.ts", "./src/shared/**/*", "./postcss.config.mjs"],
     "compilerOptions": {
-        "composite": true,
+        "lib": ["ESNext", "DOM"],
+        "target": "ESNext",
+        "module": "Preserve",
+        "moduleDetection": "force",
         "jsx": "react-jsx",
-        "module": "ESNext",
+        "allowJs": true,
+        "types": ["bun", "react"],
+
         "moduleResolution": "bundler",
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "noEmit": true,
+
+        "skipLibCheck": true,
+        "noUncheckedIndexedAccess": true,
+
         "paths": {
-            "@shared/*": ["./src/shared/*"],
-            "@/*": ["./src/renderer/src/*"]
+            "@/*": ["./src/*"]
         },
 
         "strict": true,
@@ -22,5 +31,7 @@
         "noUncheckedSideEffectImports": true,
         "forceConsistentCasingInFileNames": true,
         "noPropertyAccessFromIndexSignature": false
-    }
+    },
+    "include": ["src/**/*"],
+    "exclude": ["dist", "node_modules"]
 }
