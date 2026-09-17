@@ -5,13 +5,10 @@ import { AuthProvider, SocketIoProvider, StorageAdapter } from "@package/react/p
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { DarkTheme, DefaultTheme, ThemeProvider } from "expo-router";
 import * as SecureStore from "expo-secure-store";
-import * as SplashScreen from "expo-splash-screen";
 import { useColorScheme } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const TOKEN_KEY = "TOKEN_KEY";
-
-SplashScreen.preventAutoHideAsync();
 
 const queryClient = new QueryClient();
 

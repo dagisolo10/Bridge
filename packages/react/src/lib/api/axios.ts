@@ -28,11 +28,11 @@ api.interceptors.request.use((request) => {
     return request;
 });
 
-api.interceptors.response.use((response) => {
+api.interceptors.response.use(async (response) => {
     const newToken = response.headers["x-new-token"] as string | undefined;
 
     if (newToken && updateTokenCallback) {
-        void updateTokenCallback(newToken);
+        await updateTokenCallback(newToken);
     }
 
     return response;

@@ -19,13 +19,13 @@ export function AuthProvider({ children, storage }: AuthProviderProps) {
     const [isInitialLoading, setIsInitialLoading] = useState(true);
 
     const { data: device } = useGetDevice({ enabled: !!token });
-    const authenticated = Boolean(device);
+    const authenticated = Boolean(token && device);
 
     const updateToken = useCallback(
         async (newToken: string | null) => {
-            setToken(newToken);
             if (newToken) await storage.setItem(newToken);
             else if (storage.removeItem) await storage.removeItem();
+            setToken(newToken);
         },
         [storage],
     );

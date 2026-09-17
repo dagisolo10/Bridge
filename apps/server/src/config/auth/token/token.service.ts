@@ -16,6 +16,7 @@ export class TokenService {
         this.jwtSecretKey = this.config.getOrThrow<string>("JWT_SECRET_KEY");
     }
 
+    // todo: add expiration time
     generateToken(deviceId: string) {
         return jwt.sign({ deviceId, nonce: ulid() }, this.jwtSecretKey);
     }

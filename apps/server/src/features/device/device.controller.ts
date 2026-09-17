@@ -25,7 +25,7 @@ export class DeviceController {
     }
 
     @Patch()
-    updateDevice(id: string, data: UpdateDeviceDto) {
+    updateDevice(id: string, @Body() data: UpdateDeviceDto) {
         return this.deviceService.updateDevice(id, data);
     }
 

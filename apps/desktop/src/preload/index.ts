@@ -5,7 +5,7 @@ import { contextBridge, ipcRenderer } from "electron";
 const api = {
     invoke<Channel extends keyof IpcHandlers>(channel: Channel, ...args: IpcHandlers[Channel]["args"]): Promise<IpcHandlers[Channel]["return"]> {
         return ipcRenderer.invoke(channel, ...args).catch((err: Error) => {
-            const match = err.message.match(/Error: ([^]+)$/);
+            const match = /Error:\s(.*)$/m.exec(err.message);
             throw new Error(match ? match[1] : err.message);
         });
     },

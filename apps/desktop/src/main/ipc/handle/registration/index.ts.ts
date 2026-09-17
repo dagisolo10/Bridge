@@ -23,9 +23,12 @@ export function registerIpcHandlers() {
             throw new Error("Encryption is not available on this system.");
         }
 
-        const encryptedBuffer = fs.readFileSync(TOKEN_FILE_PATH);
-
-        return safeStorage.decryptString(encryptedBuffer);
+        try {
+            return safeStorage.decryptString(fs.readFileSync(TOKEN_FILE_PATH));
+        } catch {
+            fs.rmSync(TOKEN_FILE_PATH, { force: true });
+            return null;
+        }
     });
 
     handleIpc("auth:clear-token", () => {

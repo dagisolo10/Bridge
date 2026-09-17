@@ -12,6 +12,13 @@ export function SocketIoProvider({ children }: PropsWithChildren) {
     const [connected, setConnected] = useState(false);
     const [socket, setSocket] = useState<TypedSocket | null>(null);
 
+    const socketRef = useRef<TypedSocket | null>(null);
+    useEffect(() => {
+        if (socketRef.current && token) {
+            socketRef.current.auth = { token };
+        }
+    }, [token]);
+
     const updateTokenRef = useRef(updateToken);
     useEffect(() => {
         updateTokenRef.current = updateToken;
@@ -23,7 +30,7 @@ export function SocketIoProvider({ children }: PropsWithChildren) {
     }, [token]);
 
     useEffect(() => {
-        if (!authenticated) return;
+        if (!authenticated || !token) return;
 
         console.log("🔌  Initializing Socket connection");
 
@@ -31,8 +38,10 @@ export function SocketIoProvider({ children }: PropsWithChildren) {
             autoConnect: true,
             reconnection: true,
             transports: ["websocket"],
-            auth: { token: tokenRef.current },
+            auth: { token },
         });
+
+        socketRef.current = instance;
 
         instance.on("connect", () => {
             setConnected(true);
@@ -61,6 +70,7 @@ export function SocketIoProvider({ children }: PropsWithChildren) {
             console.log("🧹  Cleaning up socket instance...");
             instance.removeAllListeners();
             instance.disconnect();
+            socketRef.current = null;
             setSocket(null);
             setConnected(false);
         };

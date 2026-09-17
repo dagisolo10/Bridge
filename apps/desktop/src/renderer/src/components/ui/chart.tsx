@@ -82,7 +82,7 @@ const ChartStyle = ({ id, config }: { id: string; config: ChartConfig }) => {
                 __html: Object.entries(THEMES)
                     .map(
                         ([theme, prefix]) => `
-${prefix} [data-chart=${id}] {
+${prefix} [data-chart="${CSS.escape(id)}"] {
 ${colorConfig
     .map(([key, itemConfig]) => {
         const color = itemConfig.theme?.[theme as keyof typeof itemConfig.theme] ?? itemConfig.color;
@@ -138,7 +138,7 @@ function ChartTooltipContent({
             return <div className={cn("font-medium", labelClassName)}>{labelFormatter(value, payload)}</div>;
         }
 
-        if (!value) {
+        if (value == null) {
             return null;
         }
 
@@ -167,7 +167,7 @@ function ChartTooltipContent({
                                 key={index}
                                 className={cn("[&>svg]:text-muted-foreground flex w-full flex-wrap items-stretch gap-2 [&>svg]:h-2.5 [&>svg]:w-2.5", indicator === "dot" && "items-center")}
                             >
-                                {formatter && item?.value !== undefined && item.name ? (
+                                {formatter && item?.value !== undefined && item.name !== null ? (
                                     formatter(item.value, item.name, item, index, item.payload)
                                 ) : (
                                     <>
@@ -176,7 +176,7 @@ function ChartTooltipContent({
                                         ) : (
                                             !hideIndicator && (
                                                 <div
-                                                    className={cn("shrink-0 rounded-[2px] border-(--color-border) bg-(--color-bg)", {
+                                                    className={cn("shrink-0 rounded-xs border-(--color-border) bg-(--color-bg)", {
                                                         "h-2.5 w-2.5": indicator === "dot",
                                                         "w-1": indicator === "line",
                                                         "w-0 border-[1.5px] border-dashed bg-transparent": indicator === "dashed",
@@ -244,7 +244,7 @@ function ChartLegendContent({
                                 <itemConfig.icon />
                             ) : (
                                 <div
-                                    className="h-2 w-2 shrink-0 rounded-[2px]"
+                                    className="h-2 w-2 shrink-0 rounded-xs"
                                     style={{
                                         backgroundColor: item.color,
                                     }}

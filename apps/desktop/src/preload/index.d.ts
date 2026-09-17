@@ -6,7 +6,7 @@ declare global {
     interface Window {
         electron: ElectronAPI;
         api: {
-            invoke<Channel extends keyof IpcHandlers>(channel: Channel, ...args: IpcHandlers[Channel]["args"]): Promise<IpcHandlers[Channel]["return"]> | IpcHandlers[Channel]["return"];
+            invoke<Channel extends keyof IpcHandlers>(channel: Channel, ...args: IpcHandlers[Channel]["args"]): Promise<IpcHandlers[Channel]["return"]>;
         };
     }
 }

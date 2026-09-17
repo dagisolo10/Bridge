@@ -30,7 +30,7 @@ export class AuthGuard implements CanActivate {
         }
 
         if (!authHeader.startsWith("Bearer ")) {
-            this.logger.warn(`Authorization failed: Invalid header structure (${authHeader.slice(0, 15)}...).`);
+            this.logger.warn("Authorization failed: Invalid authorization header format.");
             throw new UnauthorizedException("Invalid authorization header format. Expected 'Bearer <token>'");
         }
 

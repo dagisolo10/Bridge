@@ -50,7 +50,7 @@ function InputGroupAddon({ className, align = "inline-start", ...props }: React.
                 if ((e.target as HTMLElement).closest("button")) {
                     return;
                 }
-                e.currentTarget.parentElement?.querySelector("input")?.focus();
+                e.currentTarget.parentElement?.querySelector<HTMLInputElement | HTMLTextAreaElement>("input, textarea")?.focus();
             }}
             {...props}
         />

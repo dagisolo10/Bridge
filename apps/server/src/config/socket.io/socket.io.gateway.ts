@@ -6,6 +6,7 @@ import { ClientToDaemonEvent } from "@package/socket";
 
 export const Subscribe = (event: ClientToDaemonEvent) => SubscribeMessage(event);
 
+// todo: add allowlist for origins
 @WebSocketGateway({ cors: { credentials: true, origin: "*" } })
 export class SocketIoGateway implements OnGatewayConnection, OnGatewayDisconnect {
     constructor(
@@ -39,14 +40,14 @@ export class SocketIoGateway implements OnGatewayConnection, OnGatewayDisconnect
 
             client.emit("token:new", { newToken });
 
-            console.log("✅ Socket connected:", client.id);
+            console.log("✅  Socket connected:", client.id);
         } catch (error) {
             setImmediate(() => client.disconnect());
-            console.log("Socket authentication failed", (error as Error).message);
+            console.log("❌  Socket authentication failed:", (error as Error).message);
         }
     }
 
     handleDisconnect() {
-        console.log("❌ Socket disconnected:");
+        console.log("❌  Socket disconnected:");
     }
 }

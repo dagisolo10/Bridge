@@ -291,8 +291,11 @@ export default function App() {
 
                         {/* controls */}
                         <div className="rounded-3xl border border-white/5 bg-white/2 p-6 backdrop-blur-xl">
-                            <label className="mb-2 block font-mono text-[10px] tracking-[0.28em] text-slate-500 uppercase">Call Sign</label>
+                            <label htmlFor="call-sign" className="mb-2 block font-mono text-[10px] tracking-[0.28em] text-slate-500 uppercase">
+                                Call Sign
+                            </label>
                             <input
+                                id="call-sign"
                                 value={callSign}
                                 onChange={(e) => setCallSign(e.target.value)}
                                 spellCheck={false}

@@ -51,8 +51,7 @@ export class DeviceService {
 
     async deleteDevices() {
         // todo: Remove
-        await this.prisma.token.deleteMany();
-        await this.prisma.device.deleteMany();
+        await this.prisma.$transaction([this.prisma.token.deleteMany(), this.prisma.device.deleteMany()]);
 
         return { success: true };
     }

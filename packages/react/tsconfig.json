@@ -30,7 +30,7 @@
         "noFallthroughCasesInSwitch": true,
         "noUncheckedSideEffectImports": true,
         "forceConsistentCasingInFileNames": true,
-        "noPropertyAccessFromIndexSignature": false
+        "noPropertyAccessFromIndexSignature": true
     },
     "include": ["src/**/*"],
     "exclude": ["dist", "node_modules"]

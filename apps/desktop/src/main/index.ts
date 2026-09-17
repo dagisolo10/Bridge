@@ -23,17 +23,16 @@ void app.whenReady().then(() => {
     app.on("activate", () => BrowserWindow.getAllWindows().length === 0 && createAndCloseWindow());
 });
 
-app.on("window-all-closed", () => process.platform !== "darwin" && closeWindow());
+app.on("window-all-closed", () => {
+    if (process.platform !== "darwin") app.quit();
+});
 
 function createAndCloseWindow() {
     mainWindow = createWindow();
 
     if (mainWindow) {
-        mainWindow.on("closed", closeWindow);
+        mainWindow.on("closed", () => {
+            mainWindow = null;
+        });
     }
-}
-
-function closeWindow() {
-    app.quit();
-    mainWindow = null;
 }
