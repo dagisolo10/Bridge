@@ -1,11 +1,22 @@
 {
-    "extends": ["expo/tsconfig.base", "@package/typescript-config"],
+    "extends": "expo/tsconfig.base",
     "compilerOptions": {
-        "strict": true,
         "paths": {
             "@/*": ["./src/*"],
             "@/assets/*": ["./assets/*"]
-        }
+        },
+
+        "strict": true,
+        "noImplicitAny": true,
+        "noUnusedLocals": true,
+        "noErrorTruncation": true,
+        "noUnusedParameters": true,
+        "noImplicitOverride": true,
+        "allowUnreachableCode": false,
+        "noFallthroughCasesInSwitch": true,
+        "noUncheckedSideEffectImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "noPropertyAccessFromIndexSignature": true
     },
-    "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts"]
+    "include": ["**/*.ts", "**/*.tsx", ".expo/types/**/*.ts", "expo-env.d.ts", "nativewind-env.d.ts"]
 }

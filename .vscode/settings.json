@@ -1,3 +1,5 @@
 {
-    "cSpell.words": ["libsql"]
+    "files.autoSave": "off",
+    "cSpell.words": ["libsql", "napi", "potplayer", "trackpad", "typepad", "uiohook", "ulidx"],
+    "js/ts.experimental.useTsgo": true
 }

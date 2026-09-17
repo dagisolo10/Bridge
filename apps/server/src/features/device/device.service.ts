@@ -1,0 +1,58 @@
+import { TokenService } from "@/config/auth/token/token.service";
+import { PrismaService } from "@/config/prisma/prisma.service";
+import { RequestService } from "@/config/request/request.service";
+import { CreateDeviceDto, UpdateDeviceDto } from "@/features/device/device.dto";
+import { Injectable, NotFoundException } from "@nestjs/common";
+
+@Injectable()
+export class DeviceService {
+    constructor(
+        private readonly prisma: PrismaService,
+        private readonly tokenService: TokenService,
+        private readonly requestService: RequestService,
+    ) {}
+
+    // todo: Update
+    async getDevices() {
+        return { devices: await this.prisma.device.findMany(), tokens: await this.prisma.token.findMany() };
+    }
+
+    async getDevice() {
+        const deviceId = this.requestService.getDeviceId();
+
+        const device = await this.prisma.device.findUnique({ where: { id: deviceId } });
+
+        if (!device) {
+            throw new NotFoundException("Device not found");
+        }
+
+        return device;
+    }
+
+    async addDevice(data: CreateDeviceDto) {
+        return await this.prisma.$transaction(async (tx) => {
+            const device = await tx.device.create({ data: { name: data.name, type: data.type } });
+
+            const token = await this.tokenService.registerDeviceToken(device.id, tx);
+
+            return { device, token };
+        });
+    }
+
+    async updateDevice(id: string, data: UpdateDeviceDto) {
+        const device = await this.prisma.device.findUnique({ where: { id } });
+
+        if (!device) {
+            throw new NotFoundException("Device not found");
+        }
+
+        return await this.prisma.device.update({ where: { id }, data });
+    }
+
+    async deleteDevices() {
+        // todo: Remove
+        await this.prisma.$transaction([this.prisma.token.deleteMany(), this.prisma.device.deleteMany()]);
+
+        return { success: true };
+    }
+}

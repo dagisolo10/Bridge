@@ -1,0 +1,47 @@
+{
+    "name": "@package/react",
+    "version": "0.1.0",
+    "main": "./src/index.ts",
+    "module": "./src/index.ts",
+    "type": "module",
+    "types": "./src/index.ts",
+    "exports": {
+        "./hooks": {
+            "default": "./src/hooks/index.ts",
+            "import": "./src/hooks/index.ts",
+            "types": "./src/hooks/index.ts"
+        },
+        "./contexts": {
+            "default": "./src/contexts/index.ts",
+            "import": "./src/contexts/index.ts",
+            "types": "./src/contexts/index.ts"
+        },
+        "./providers": {
+            "default": "./src/providers/index.ts",
+            "import": "./src/providers/index.ts",
+            "types": "./src/providers/index.ts"
+        }
+    },
+    "private": true,
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@package/model": "*",
+        "@package/socket": "*"
+    },
+    "peerDependencies": {
+        "@tanstack/react-query": "^5.102.8",
+        "axios": "^1.20.0",
+        "react": "19.2.3",
+        "socket.io-client": "^4.8.3"
+    },
+    "devDependencies": {
+        "@package/eslint-config": "*",
+        "@types/bun": "latest",
+        "@types/react": "^19",
+        "eslint-plugin-react-hooks": "^7.1.1",
+        "typescript": "^7.0.2",
+        "typescript-eslint": "^8.70.0"
+    }
+}
