@@ -1,8 +1,6 @@
-import { Public } from "@/config/auth/public.decorator";
 import { PeerService } from "@/features/peer/peer.service";
 import { Controller, Delete, Get, Param, Patch, Post } from "@nestjs/common";
 
-@Public()
 @Controller("peer")
 export class PeerController {
     constructor(private readonly peerService: PeerService) {}

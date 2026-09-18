@@ -1,6 +1,6 @@
 import { PrismaService } from "@/config/prisma/prisma.service";
 import { RequestService } from "@/config/request/request.service";
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { BadRequestException, Injectable, NotFoundException } from "@nestjs/common";
 
 @Injectable()
 export class PeerRequestService {
@@ -11,6 +11,10 @@ export class PeerRequestService {
 
     async sendPeerRequest(parentId: string) {
         const peerId = this.request.getDeviceId();
+
+        if (parentId === peerId) {
+            throw new BadRequestException("A device cannot peer with itself");
+        }
 
         const parentDevice = await this.prisma.device.findUnique({ where: { id: parentId } });
 
@@ -38,6 +42,10 @@ export class PeerRequestService {
             throw new NotFoundException("Peer request not found");
         }
 
+        if (peerRequest.resolvedAt) {
+            throw new BadRequestException("Request already resolved");
+        }
+
         const updatedRequest = await this.prisma.$transaction(async (tx) => {
             const request = await tx.peerRequest.update({
                 where: { parentId, id: peerRequestId },
@@ -51,6 +59,8 @@ export class PeerRequestService {
                     where: { peerId_parentId: { peerId: request.peerId, parentId } },
                 });
             }
+
+            return request;
         });
 
         // todo: socket notification

@@ -27,7 +27,7 @@ export type PeerRequest = {
 
 export type Rule = {
     id: string;
-    key: string;
+    key: RuleKey;
     name: string;
     isDefault: boolean;
     isAllowed: boolean;
