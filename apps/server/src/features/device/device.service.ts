@@ -14,7 +14,7 @@ export class DeviceService {
 
     // todo: Update
     async getDevices() {
-        return { devices: await this.prisma.device.findMany(), tokens: await this.prisma.token.findMany() };
+        return await this.prisma.device.findMany();
     }
 
     async getDevice() {

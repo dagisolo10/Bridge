@@ -13,9 +13,11 @@ model Device {
     createdAt DateTime   @default(now())
     updatedAt DateTime   @updatedAt
 
-    tokens  Token[]
-    peers   Peer[]  @relation("PeerDevice")
-    parents Peer[]  @relation("ParentDevice")
+    tokens               Token[]
+    peers                Peer[]        @relation("PeerDevice")
+    parents              Peer[]        @relation("ParentDevice")
+    sentPeerRequests     PeerRequest[] @relation("SentPeerRequests")
+    receivedPeerRequests PeerRequest[] @relation("ReceivedPeerRequests")
 }
 
 enum DeviceType {
@@ -63,10 +65,10 @@ model Rule {
 }
 
 model PeerRule {
-    id     String @id @default(uuid())
-    peerId String
-    ruleId String
-
+    id        String   @id @default(uuid())
+    peerId    String
+    ruleId    String
+    isAllowed Boolean
     createdAt DateTime @default(now())
 
     peer Peer @relation(fields: [peerId], references: [id], onDelete: Cascade)
@@ -75,9 +77,24 @@ model PeerRule {
     @@unique([peerId, ruleId])
 }
 
+model PeerRequest {
+    id       String @id @default(uuid())
+    parentId String
+    peerId   String
+
+    resolvedAt DateTime?
+    accepted   Boolean   @default(false)
+    createdAt  DateTime  @default(now())
+    updatedAt  DateTime  @updatedAt
+
+    peer   Device @relation("SentPeerRequests", fields: [peerId], references: [id], onDelete: Cascade)
+    parent Device @relation("ReceivedPeerRequests", fields: [parentId], references: [id], onDelete: Cascade)
+
+    @@unique([parentId, peerId])
+}
+
 enum RuleKey {
     FILE_SHARING
-
     AUDIO_STREAM
     SYSTEM_POWER
     MEDIA_CONTROL
