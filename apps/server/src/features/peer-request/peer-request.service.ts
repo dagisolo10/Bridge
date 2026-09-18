@@ -36,21 +36,34 @@ export class PeerRequestService {
     async acceptRejectRequest(peerRequestId: string, accepted: boolean) {
         const parentId = this.request.getDeviceId();
 
-        const peerRequest = await this.prisma.peerRequest.findFirst({ where: { parentId, id: peerRequestId } });
-
-        if (!peerRequest) {
-            throw new NotFoundException("Peer request not found");
-        }
-
-        if (peerRequest.resolvedAt) {
-            throw new BadRequestException("Request already resolved");
-        }
-
-        const updatedRequest = await this.prisma.$transaction(async (tx) => {
-            const request = await tx.peerRequest.update({
-                where: { parentId, id: peerRequestId },
-                data: { accepted, resolvedAt: new Date() },
+        return await this.prisma.$transaction(async (tx) => {
+            const { count } = await tx.peerRequest.updateMany({
+                where: {
+                    parentId,
+                    resolvedAt: null,
+                    id: peerRequestId,
+                },
+                data: {
+                    accepted,
+                    resolvedAt: new Date(),
+                },
             });
+
+            if (count === 0) {
+                const existing = await tx.peerRequest.findUnique({ where: { id: peerRequestId } });
+
+                if (!existing || existing.parentId !== parentId) {
+                    throw new NotFoundException("Peer request not found");
+                }
+
+                throw new BadRequestException("Request already resolved");
+            }
+
+            const request = await tx.peerRequest.findUnique({ where: { id: peerRequestId } });
+
+            if (!request) {
+                throw new NotFoundException("Peer request not found");
+            }
 
             if (accepted) {
                 await tx.peer.upsert({
@@ -60,11 +73,9 @@ export class PeerRequestService {
                 });
             }
 
+            // todo: socket notification
+
             return request;
         });
-
-        // todo: socket notification
-
-        return updatedRequest;
     }
 }
